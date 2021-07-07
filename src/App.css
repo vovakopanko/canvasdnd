@@ -55,6 +55,7 @@
 }
 
 .table__columnRight {
+  height: max-content;
 }
 
 

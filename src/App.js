@@ -1,39 +1,47 @@
-import './App.css';
+import { useState } from "react";
+import "./App.css";
 
 function App() {
-  // const handleClickOnDragStart = (e) => {
-  //   const div=e.target;
-  //   div.style.position='absolute';
-  //   MoveAt(e,div)
-  // }
-  // const MoveAt = (e,div) => {
-  //   div.style.left = e.pageX - div.offsetWidth / 2 + 'px';
-  //   div.style.top = e.pageY - div.offsetHeight / 2 + 'px';
-  // }
+  const [figures, setFigures] = useState([
+    {
+      id: 1,
+      draggable: true,
+      className: "columnLeft__listObj listObjs__firstObj",
+    },
+    {
+      id: 2,
+      draggable: true,
+      className: "columnLeft__listObj listObjs__secondObj",
+    },
+  ]);
 
+  const handleDragStart = (e, id) => {
+    e.dataTransfer.setData("text/plain", id);
+    e.dataTransfer.effectAllowed = "copy";
+  };
 
-  const handleDragStart=(e)=>{
-   
-  }
+  const handleDragEnd = (e) => {};
 
-  const handleDragEnd=(e)=>{
-    
-    const newDiv=e.target.cloneNode(true);
-    document.body.append(newDiv);
-    newDiv.style.position='absolute';
-    newDiv.style.left=e.clientX+'px';
-    newDiv.style.top=e.clientY+'px';
-  }
-
-  const handleOver=(e)=>{
+  const handleOver = (e) => {
     e.preventDefault();
   };
 
-  const handleDrop=(e)=>{
+  const handleDragEnter = (e) => {};
+
+  const handleDrop = (e) => {
     e.preventDefault();
-    
+    let data = e.dataTransfer.getData("text/plain");
+    let findData = document.getElementById(data);
+    let clone = findData.cloneNode(true);
+
+    clone.style.position = "absolute";
+    clone.style.left = e.clientX + "px";
+    clone.style.top = e.clientY + "px";
+    e.dataTransfer.clearData("text/plain");
+
+    e.target.append(clone);
   };
-  
+
   return (
     <div className="application">
       <div className="application__header">
@@ -43,26 +51,39 @@ function App() {
       </div>
       <div className="application__content">
         <div className="content__table">
-          <div className="columnLeft__name">
-            Object
-          </div>
+          <div className="columnLeft__name">Object</div>
           <div className="table__columnLeft">
-          <span className="columnLeft__listObjs">
-            <br /><div draggable={true} onDragStart={(e)=>handleDragStart(e)} onDragEnd={(e)=>handleDragEnd(e)} className="columnLeft__listObj listObjs__firstObj"/><br />
-            <div  draggable={true} onDragStart={(e)=>handleDragStart(e)} onDragEnd={(e)=>handleDragEnd(e)} className="columnLeft__listObj listObjs__secondObj"/>
-          </span>
+            <span className="columnLeft__listObjs">
+              {figures.map((figure) => (
+                <div key={figure.id}>
+                  <br />
+                  <div
+                    id={figure.id}
+                    draggable={figure.draggable}
+                    onDragStart={(e) => handleDragStart(e, figure.id)}
+                    onDragEnd={(e) => handleDragEnd(e)}
+                    className={figure.className}
+                  />
+                </div>
+              ))}
+            </span>
           </div>
         </div>
-        <div className="content__table" onDrop={(e)=>handleDrop(e)} onDragOver={(e)=>handleOver(e)}>
+        <div
+          className="content__table"
+          onDrop={(e) => handleDrop(e)}
+          onDragOver={(e) => handleOver(e)}
+          onDragEnter={(e) => handleDragEnter(e)}
+        >
           <div className="columnRight__name">Canvas</div>
           <div className="table__columnRight">
-          <span className="columnRight__listObjs"/>
+            <div className="columnRight__listObjs" />
           </div>
         </div>
       </div>
       <div className="application__footer">
         <span className="footer__company">
-        <b>Task for: </b>Satellite Innovations
+          <b>Task for: </b>Satellite Innovations
         </span>
         <span className="footer__date">
           <b>Date:</b> 07.07.2021
