@@ -16,12 +16,14 @@
 }
 
 .content__table {
-  height: 90vh;
   background-color: rgb(233, 236, 233);
-  border-left: 0.5px solid black;
+  border-right: 0.5px solid black;
+
+  display: table;
 }
 
 .table__columnLeft {
+  height: 80vh;
 }
 
 .columnLeft__name,
@@ -55,7 +57,7 @@
 }
 
 .table__columnRight {
-  height: max-content;
+  height: 80vh;
 }
 
 

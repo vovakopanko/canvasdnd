@@ -15,12 +15,27 @@ function App() {
     },
   ]);
 
-  const handleDragStart = (e, id) => {
-    e.dataTransfer.setData("text/plain", id);
+  const handleDragStart = (e) => {
+    e.dataTransfer.setData("text/plain", e.target.id);
     e.dataTransfer.effectAllowed = "copy";
   };
 
   const handleDragEnd = (e) => {};
+
+  //Copy Obj
+
+  const handleDragStartCopy = (e) => {
+    e.dataTransfer.setData("copyObj", e.target.id);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragEndCopy = (e) => {
+    e.target.style.position = "absolute";
+    e.target.style.left = e.clientX + "px";
+    e.target.style.top = e.clientY + "px";
+  };
+
+  //
 
   const handleOver = (e) => {
     e.preventDefault();
@@ -28,18 +43,29 @@ function App() {
 
   const handleDragEnter = (e) => {};
 
+  const handleDragLeave = (e) => {
+    console.log("DELETE OBJECT");
+  };
+
   const handleDrop = (e) => {
+    debugger
     e.preventDefault();
-    let data = e.dataTransfer.getData("text/plain");
-    let findData = document.getElementById(data);
-    let clone = findData.cloneNode(true);
+    if (e.dataTransfer.types[0]==="text/plain") {
+      let data = e.dataTransfer.getData("text/plain");
+      let findData = document.getElementById(data);
+      let clone = findData.cloneNode(true);
 
-    clone.style.position = "absolute";
-    clone.style.left = e.clientX + "px";
-    clone.style.top = e.clientY + "px";
-    e.dataTransfer.clearData("text/plain");
+      clone.id = Math.random().toString(36).substring(7);
+      clone.addEventListener("dragstart", (e) => handleDragStartCopy(e));
+      clone.addEventListener("dragend", (e) => handleDragEndCopy(e));
 
-    e.target.append(clone);
+      clone.style.position = "absolute";
+      clone.style.left = e.clientX + "px";
+      clone.style.top = e.clientY + "px";
+
+      e.target.append(clone);
+    } 
+    e.dataTransfer.getData("copyObj")
   };
 
   return (
@@ -60,7 +86,7 @@ function App() {
                   <div
                     id={figure.id}
                     draggable={figure.draggable}
-                    onDragStart={(e) => handleDragStart(e, figure.id)}
+                    onDragStart={(e) => handleDragStart(e)}
                     onDragEnd={(e) => handleDragEnd(e)}
                     className={figure.className}
                   />
@@ -69,16 +95,15 @@ function App() {
             </span>
           </div>
         </div>
-        <div
-          className="content__table"
-          onDrop={(e) => handleDrop(e)}
-          onDragOver={(e) => handleOver(e)}
-          onDragEnter={(e) => handleDragEnter(e)}
-        >
+        <div className="content__table">
           <div className="columnRight__name">Canvas</div>
-          <div className="table__columnRight">
-            <div className="columnRight__listObjs" />
-          </div>
+          <div
+            className="table__columnRight"
+            onDragLeave={(e) => handleDragLeave(e)}
+            onDrop={(e) => handleDrop(e)}
+            onDragOver={(e) => handleOver(e)}
+            onDragEnter={(e) => handleDragEnter(e)}
+          ></div>
         </div>
       </div>
       <div className="application__footer">
