@@ -82,3 +82,7 @@
   justify-self: end;
   margin-right: 10px;
 }
+
+.active__figure{
+  z-index: 3;
+}

@@ -15,24 +15,39 @@ function App() {
     },
   ]);
 
+  let zInd = 0;
+
   const handleDragStart = (e) => {
+    
+    e.target.style.zIndex = zInd++;
     e.dataTransfer.setData("text/plain", e.target.id);
     e.dataTransfer.effectAllowed = "copy";
   };
 
-  const handleDragEnd = (e) => {};
+  const handleDragEnd = (e) => {
+    debugger;
+  };
 
   //Copy Obj
 
   const handleDragStartCopy = (e) => {
-    e.dataTransfer.setData("copyObj", e.target.id);
-    e.dataTransfer.effectAllowed = "move";
+    e.target.style.zIndex = zInd++;
+    e.target.style.border = "2px solid red";
+    e.target.classList.add("active__figure");
+    e.dataTransfer.setData("copyFigure", e.target.id);
+    e.dataTransfer.effectAllowed = "copy";
   };
 
   const handleDragEndCopy = (e) => {
+    if(e.dataTransfer.dropEffect==="none"){
+      document.getElementById(e.target.id).remove()
+    }
+    debugger;
+    e.target.classList.remove("active__figure");
     e.target.style.position = "absolute";
     e.target.style.left = e.clientX + "px";
     e.target.style.top = e.clientY + "px";
+    e.target.style.border = "none";
   };
 
   //
@@ -41,16 +56,20 @@ function App() {
     e.preventDefault();
   };
 
-  const handleDragEnter = (e) => {};
+  const handleDragEnter = (e) => {
+    
+  };
 
   const handleDragLeave = (e) => {
+    
     console.log("DELETE OBJECT");
   };
 
+  // const handleOnDrag = (e) => {};
+
   const handleDrop = (e) => {
-    debugger
     e.preventDefault();
-    if (e.dataTransfer.types[0]==="text/plain") {
+    if (e.dataTransfer.types[0] === "text/plain") {
       let data = e.dataTransfer.getData("text/plain");
       let findData = document.getElementById(data);
       let clone = findData.cloneNode(true);
@@ -64,8 +83,8 @@ function App() {
       clone.style.top = e.clientY + "px";
 
       e.target.append(clone);
-    } 
-    e.dataTransfer.getData("copyObj")
+    }
+    e.dataTransfer.getData("copyFigure");
   };
 
   return (
@@ -88,6 +107,7 @@ function App() {
                     draggable={figure.draggable}
                     onDragStart={(e) => handleDragStart(e)}
                     onDragEnd={(e) => handleDragEnd(e)}
+                    // onDrag={(e) => handleOnDrag(e)}
                     className={figure.className}
                   />
                 </div>
