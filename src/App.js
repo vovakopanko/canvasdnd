@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
@@ -15,18 +15,30 @@ function App() {
     },
   ]);
 
+// Deleted div ellement, when you click on figure
+
+  const handleKeyPress = (e) => {
+    if (e.code === "Delete") {
+      //Referring to the figure
+    }
+  };
+
+  useEffect(() => {
+    document.body.addEventListener("keydown", handleKeyPress);
+    return () => {
+      document.body.addEventListener("keyup", handleKeyPress);
+    };
+  }, []);
+
   let zInd = 0;
 
   const handleDragStart = (e) => {
-    
     e.target.style.zIndex = zInd++;
     e.dataTransfer.setData("text/plain", e.target.id);
     e.dataTransfer.effectAllowed = "copy";
   };
 
-  const handleDragEnd = (e) => {
-    debugger;
-  };
+  const handleDragEnd = (e) => {};
 
   //Copy Obj
 
@@ -39,10 +51,9 @@ function App() {
   };
 
   const handleDragEndCopy = (e) => {
-    if(e.dataTransfer.dropEffect==="none"){
-      document.getElementById(e.target.id).remove()
+    if (e.dataTransfer.dropEffect === "none") {
+      document.getElementById(e.target.id).remove();
     }
-    debugger;
     e.target.classList.remove("active__figure");
     e.target.style.position = "absolute";
     e.target.style.left = e.clientX + "px";
@@ -56,16 +67,11 @@ function App() {
     e.preventDefault();
   };
 
-  const handleDragEnter = (e) => {
-    
-  };
+  const handleDragEnter = (e) => {};
 
   const handleDragLeave = (e) => {
-    
     console.log("DELETE OBJECT");
   };
-
-  // const handleOnDrag = (e) => {};
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -107,7 +113,6 @@ function App() {
                     draggable={figure.draggable}
                     onDragStart={(e) => handleDragStart(e)}
                     onDragEnd={(e) => handleDragEnd(e)}
-                    // onDrag={(e) => handleOnDrag(e)}
                     className={figure.className}
                   />
                 </div>
